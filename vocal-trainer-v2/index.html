@@ -21,9 +21,7 @@
   <p class="sub">Три раздела песни, в порядке следования. Всё в мужской октаве.</p>
   <div class="keys" id="keys"></div>
 
-  <div class="row">
-    <button class="btn primary" id="playPhrase">Спеть фразу целиком</button>
-  </div>
+  <div class="row"><button class="btn primary" id="playPhrase">Спеть фразу целиком</button></div>
   <div class="strip" id="strip"></div>
 
   <h2 class="h2">Эталонные трубы</h2>
@@ -37,20 +35,18 @@
   </div>
 
   <h2 class="h2">Повторить голосом</h2>
-  <div class="target-line">
-    <span class="t1" id="targetName">—</span>
-    <span class="t2" id="targetHz"></span>
-  </div>
+  <div class="target-line"><span class="t1" id="targetName">—</span><span class="t2" id="targetHz"></span></div>
 
   <div class="row">
     <button class="btn" id="micBtn">Включить микрофон</button>
+    <button class="btn primary" id="listenBtn" disabled>Слушать 3 секунды</button>
+  </div>
+  <div class="listen-progress" id="listenProgress" aria-live="polite">
+    <div class="listen-bar"><div class="listen-fill" id="listenFill"></div></div>
+    <span id="listenText">Сначала включите микрофон</span>
   </div>
 
-  <div class="meter">
-    <div class="band"></div>
-    <div class="center"></div>
-    <div class="needle idle" id="needle"></div>
-  </div>
+  <div class="meter"><div class="band"></div><div class="center"></div><div class="needle idle" id="needle"></div></div>
   <div class="meter-labels"><span>ниже на 50 центов</span><span>точно</span><span>выше на 50</span></div>
 
   <div class="readout">
@@ -62,11 +58,10 @@
   <p class="verdict" id="verdict">Микрофон выключен. Сначала послушайте трубу, потом включайте.</p>
   <p class="status" id="status" role="status" aria-live="polite">Загрузка тренажёра…</p>
 
+  <p class="note"><b>Как тренироваться.</b> Послушайте трубу, включите микрофон, нажмите «Слушать 3 секунды» и сразу начинайте ровное «ааа». В конце получите итог всей попытки, а не случайного мгновения.</p>
   <p class="note"><b>Про октаву.</b> Если вы поёте ту же ноту, но октавой ниже или выше, тренажёр скажет об этом отдельно.</p>
   <p class="note"><b>Не слышно на iPhone?</b> Проверьте бесшумный режим. Микрофону нужен HTTPS и разрешение Safari.</p>
-  <p class="note"><b>Оговорки.</b> Голос — формантный синтез, а не запись певца. Ритм фразы приблизительный.</p>
 </div>
-
 <script src="core.js" defer></script>
 <script src="pitch.js" defer></script>
 </body>
