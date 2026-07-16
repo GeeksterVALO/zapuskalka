@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Тренажёр рефрена — Призрак оперы</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">Тренажёр рефрена · мужская октава</div>
+  <h1>Услышать эталон,<br><em>потом попасть в него</em></h1>
+  <p class="lede">Выберите тональность — трубы перестроятся под неё. Труба звучит и одновременно становится целью для микрофона. Эталон не подстраивается под голос: сдвигается только стрелка.</p>
+
+  <div class="seg" role="group" aria-label="Тембр эталона">
+    <button class="seg-btn is-on" id="modeOrgan" aria-pressed="true">Орган</button>
+    <button class="seg-btn" id="modeVoice" aria-pressed="false">Голос «фэ»</button>
+  </div>
+
+  <h2 class="h2">Тональность</h2>
+  <p class="sub">Три раздела песни, в порядке следования. Всё в мужской октаве.</p>
+  <div class="keys" id="keys"></div>
+
+  <div class="row">
+    <button class="btn primary" id="playPhrase">Спеть фразу целиком</button>
+  </div>
+  <div class="strip" id="strip"></div>
+
+  <h2 class="h2">Эталонные трубы</h2>
+  <p class="sub">Верхние пять ступеней тональности. Длиннее труба — ниже звук.</p>
+  <div class="pipes" id="pipes"></div>
+
+  <h2 class="h2">Повторить голосом</h2>
+  <div class="target-line">
+    <span class="t1" id="targetName">—</span>
+    <span class="t2" id="targetHz"></span>
+  </div>
+
+  <div class="row">
+    <button class="btn" id="micBtn">Включить микрофон</button>
+  </div>
+
+  <div class="meter">
+    <div class="band"></div>
+    <div class="center"></div>
+    <div class="needle idle" id="needle"></div>
+  </div>
+  <div class="meter-labels"><span>ниже на 50 центов</span><span>точно</span><span>выше на 50</span></div>
+
+  <div class="readout">
+    <div class="cell"><div class="v" id="vCents">—</div><div class="k">Отклонение</div></div>
+    <div class="cell"><div class="v" id="vHz">—</div><div class="k">Ваша высота</div></div>
+    <div class="cell"><div class="v" id="vStab">—</div><div class="k">Стабильность</div></div>
+  </div>
+
+  <p class="verdict" id="verdict">Микрофон выключен. Сначала послушайте трубу, потом включайте.</p>
+  <p class="status" id="status" role="status" aria-live="polite"></p>
+
+  <p class="note">
+    <b>Про октаву.</b> Если вы поёте ту же ноту, но октавой ниже или выше, тренажёр не считает это фальшью —
+    он скажет об этом отдельно, а стрелка покажет отклонение внутри октавы. Обычная ошибка новичков —
+    гонять стрелку, не замечая, что поёшь вообще не в том регистре.
+  </p>
+  <p class="note">
+    <b>Не слышно на iPhone?</b> Проверьте переключатель звонок/бесшумно: в бесшумном режиме iOS глушит звук
+    веб-страниц целиком, а ползунок громкости при этом выглядит нормально. Микрофону нужен HTTPS
+    и разрешение браузера; внутри чужого iframe он часто запрещён — тогда откройте страницу отдельной вкладкой.
+  </p>
+  <p class="note">
+    <b>Оговорки.</b> Голос — формантный синтез, а не запись певца. Мелодия восстановлена по любительским
+    разборам и сверена с гармонией, это не официальная партитура: рисунок верный, ритм приблизительный.
+    Строчка Кристины звучит здесь на октаву ниже настоящей, потому что октава везде мужская.
+  </p>
+</div>
+
+<script src="app1.js"></script>
+<script src="app2.js"></script>
+<script src="app3.js"></script>
+<script src="app4.js"></script>
+<script src="app5.js"></script>
+</body>
+</html>
