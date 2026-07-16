@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Тренажёр нот — Призрак оперы</title>
+<style>
+:root{--ink:#1A0F14;--velvet:#6B1F2E;--brass:#C9A227;--brass-hi:#EEDB94;--parchment:#E9DCC9;--muted:#9A8878;--good:#8FCB9B;--warn:#E7B873;--bad:#E08B91}
+*{box-sizing:border-box;margin:0;padding:0} body{background:radial-gradient(120% 80% at 50% 0%,#2C1620 0%,var(--ink) 62%);color:var(--parchment);font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;min-height:100vh;padding:30px 18px calc(44px + env(safe-area-inset-bottom));-webkit-font-smoothing:antialiased}.wrap{max-width:620px;margin:auto}.eyebrow{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}h1{font:400 30px/1.15 Georgia,serif;margin-bottom:8px}h1 em{color:var(--brass-hi)}.lede{font-size:14px;line-height:1.55;color:var(--muted);margin-bottom:24px}.section{margin-top:28px}.section-title{font:400 19px Georgia,serif;margin-bottom:6px}.section-sub{font-size:12.5px;line-height:1.5;color:var(--muted);margin-bottom:14px}
+.pipes{display:flex;align-items:flex-end;gap:7px;height:285px;border-bottom:1px solid rgba(201,162,39,.35);padding:0 3px}.pipe{flex:1;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;border:0;background:none;color:inherit;cursor:pointer;font:inherit;-webkit-tap-highlight-color:transparent}.tube{width:100%;border-radius:999px 999px 0 0;background:linear-gradient(90deg,#806517 0%,var(--brass) 32%,var(--brass-hi) 47%,var(--brass) 62%,#665011 100%);box-shadow:inset 0 0 0 1px rgba(0,0,0,.35);transition:.16s}.pipe.flat .tube{background:linear-gradient(90deg,#4A3A2A,#8B7355 42%,#B39A76 50%,#8B7355 58%,#4A3A2A)}.pipe.sounding .tube,.pipe.selected .tube{filter:brightness(1.5) saturate(1.15);transform:translateY(-4px);box-shadow:0 0 20px rgba(238,219,148,.18),inset 0 0 0 1px rgba(0,0,0,.3)}.lbl{margin-top:9px;text-align:center}.ru{font:15px Georgia,serif}.sci{font-size:10px;color:var(--muted);letter-spacing:.08em;margin-top:2px}.hz{font-size:9px;color:#B4707C;margin-top:1px}
+.row{display:flex;gap:9px;flex-wrap:wrap;margin-top:18px}.btn{flex:1 1 170px;border:1px solid rgba(233,220,201,.28);background:rgba(255,255,255,.015);color:var(--parchment);font-size:13px;line-height:1.25;padding:13px 12px;border-radius:6px;cursor:pointer;-webkit-tap-highlight-color:transparent}.btn.primary{border-color:var(--brass);color:var(--brass-hi)}.btn.active{background:rgba(107,31,46,.58);border-color:var(--brass)}.btn:disabled{opacity:.45}.choice{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:12px}.choice button{border:1px solid rgba(233,220,201,.22);background:transparent;color:var(--parchment);padding:9px 3px;border-radius:5px;font-size:12px}.choice button.active{border-color:var(--brass);background:rgba(107,31,46,.45);color:var(--brass-hi)}
+.meter{margin-top:14px;padding:18px;border:1px solid rgba(233,220,201,.16);border-radius:10px;background:rgba(0,0,0,.16)}.target{font-size:12px;color:var(--muted);text-align:center}.detected{font:400 46px/1 Georgia,serif;text-align:center;margin:9px 0 5px}.detected small{font:14px -apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;color:var(--muted)}.cents{text-align:center;font-size:14px;min-height:20px}.bar{height:9px;background:rgba(255,255,255,.08);border-radius:99px;margin:16px 0 8px;position:relative;overflow:hidden}.bar::after{content:"";position:absolute;left:50%;top:0;bottom:0;width:2px;background:var(--brass-hi)}.needle{position:absolute;top:-3px;left:50%;width:4px;height:15px;border-radius:4px;background:var(--bad);transform:translateX(-50%);transition:left .08s linear,background .08s}.scale{display:flex;justify-content:space-between;color:var(--muted);font-size:10px}.stability{text-align:center;font-size:11px;color:var(--muted);margin-top:10px}.status{margin-top:12px;min-height:18px;font-size:12px;color:#E4A0AC;line-height:1.45}.note{margin-top:20px;border-left:2px solid var(--velvet);padding-left:12px;font-size:12.5px;line-height:1.58;color:var(--muted)}.note b{color:var(--parchment)}
+@media(max-width:430px){h1{font-size:26px}.pipes{height:245px;gap:5px}.ru{font-size:13px}.hz{display:none}.choice{gap:4px}.choice button{font-size:11px}.detected{font-size:40px}}
+@media(prefers-reduced-motion:reduce){.tube,.needle{transition:none}}
+</style>
+</head>
+<body><div class="wrap">
+<div class="eyebrow">Вокальный тренажёр · первая октава</div>
+<h1>Сначала услышь ноту,<br><em>потом повтори её</em></h1>
+<p class="lede">Нажми на трубу — она воспроизведёт чистый эталон. Выбранная труба станет целью для микрофона.</p>
+<div class="pipes" id="pipes"></div>
+<div class="row">
+<button class="btn primary" id="playScale">Соль – фа – ми подряд</button>
+<button class="btn" id="playPhrase">Спуск: соль – фа – ми♭ – ре</button>
+</div>
+<p class="status" id="status" role="status" aria-live="polite"></p>
+
+<section class="section">
+<h2 class="section-title">Голосоподобное «phaaa»</h2>
+<p class="section-sub">Сначала выбери ноту трубой или кнопкой, затем нажми «phaaa». Это синтезированный мужской тембр, а не запись человека.</p>
+<div class="choice" id="voiceChoices"></div>
+<div class="row"><button class="btn primary" id="playVocal">▶ Phaaaa на выбранной ноте</button><button class="btn" id="playVocalPhrase">Phaaa: соль → фа → ми♭ → ре</button></div>
+</section>
+
+<section class="section">
+<h2 class="section-title">Повтори голосом</h2>
+<p class="section-sub">Нажми выбранную трубу, запомни звук, затем включи микрофон и пропой «ааа». На iPhone лучше держать телефон в 25–40 см от рта.</p>
+<div class="row"><button class="btn primary" id="micBtn">Включить микрофон</button></div>
+<div class="meter">
+<div class="target" id="targetText">Цель: соль первой октавы · G4 · 392 Гц</div>
+<div class="detected" id="detected">— <small>жду голос</small></div>
+<div class="cents" id="cents">Сначала включи микрофон</div>
+<div class="bar"><div class="needle" id="needle"></div></div>
+<div class="scale"><span>ниже −50</span><span>точно</span><span>выше +50</span></div>
+<div class="stability" id="stability">Стабильность: —</div>
+</div>
+</section>
+
+<p class="note"><b>Важно:</b> трубы всегда остаются эталоном. Нажатие на трубу одновременно воспроизводит ноту и выбирает её как цель. Микрофон ничего не меняет в эталонном звуке.</p>
+<p class="note"><b>На iPhone:</b> микрофон работает только в Safari/браузере с разрешением и обычно требует HTTPS.</p>
+</div>
+<script>
+const NOTES=[
+ {ru:'соль',full:'соль первой октавы',sci:'G4',hz:392.00,flat:false},
+ {ru:'фа',full:'фа первой октавы',sci:'F4',hz:349.23,flat:false},
+ {ru:'ми',full:'ми первой октавы',sci:'E4',hz:329.63,flat:false},
+ {ru:'ми♭',full:'ми-бемоль первой октавы',sci:'E♭4',hz:311.13,flat:true},
+ {ru:'ре',full:'ре первой октавы',sci:'D4',hz:293.66,flat:false}
+];
+const $=id=>document.getElementById(id), pipes=$('pipes'), choices=$('voiceChoices'), statusEl=$('status');
+let selected=0,ctx=null,micStream=null,micSource=null,analyser=null,micRunning=false,raf=0,pitchHistory=[];
+function status(t){statusEl.textContent=t||''}
+function render(){
+ const min=NOTES.at(-1).hz,max=NOTES[0].hz;
+ NOTES.forEach((n,i)=>{
+  const b=document.createElement('button');b.className='pipe'+(n.flat?' flat':'');b.setAttribute('aria-label',`${n.full}, ${n.sci}`);
+  const ratio=(max-n.hz)/(max-min),h=42+ratio*43;
+  b.innerHTML=`<div class="tube" style="height:${h}%"></div><div class="lbl"><div class="ru">${n.ru}</div><div class="sci">${n.sci}</div><div class="hz">${n.hz.toFixed(0)} Гц</div></div>`;
+  b.onclick=async()=>{selectNote(i);const ac=await readyAudio();if(ac)playReference(ac,n.hz,1.15,b)};pipes.appendChild(b);
+  const c=document.createElement('button');c.textContent=n.ru;c.onclick=()=>selectNote(i);choices.appendChild(c);
+ });selectNote(0);
+}
+function selectNote(i){selected=i;[...pipes.children].forEach((e,k)=>e.classList.toggle('selected',k===i));[...choices.children].forEach((e,k)=>e.classList.toggle('active',k===i));const n=NOTES[i];$('targetText').textContent=`Цель: ${n.full} · ${n.sci} · ${n.hz.toFixed(0)} Гц`;}
+async function readyAudio(){const AC=window.AudioContext||window.webkitAudioContext;if(!AC){status('Этот браузер не поддерживает Web Audio.');return null}if(!ctx)ctx=new AC();if(ctx.state!=='running')try{await ctx.resume()}catch(e){}try{const s=ctx.createBufferSource();s.buffer=ctx.createBuffer(1,1,22050);s.connect(ctx.destination);s.start()}catch(e){}if(ctx.state!=='running'){status('Звук заблокирован. Нажми ещё раз или открой страницу в Safari.');return null}status('');return ctx}
+function flash(el,t0,dur){if(!el)return;const delay=Math.max(0,(t0-ctx.currentTime)*1000);setTimeout(()=>{el.classList.add('sounding');setTimeout(()=>el.classList.remove('sounding'),dur*1000)},delay)}
+function envelope(ac,t0,dur,peak=.34){const g=ac.createGain();g.gain.setValueAtTime(.0001,t0);g.gain.exponentialRampToValueAtTime(peak,t0+.045);g.gain.setValueAtTime(peak,t0+dur*.7);g.gain.exponentialRampToValueAtTime(.0001,t0+dur);return g}
+function playReference(ac,freq,dur,el,when){const t0=when??ac.currentTime+.035,g=envelope(ac,t0,dur,.34);g.connect(ac.destination);[[1,1],[2,.38],[3,.18],[4,.09],[6,.035]].forEach(([m,a])=>{const o=ac.createOscillator(),og=ac.createGain();o.type='sine';o.frequency.value=freq*m;og.gain.value=a;o.connect(og);og.connect(g);o.start(t0);o.stop(t0+dur+.06)});flash(el,t0,dur)}
+function playVocal(ac,freq,dur=2.1,when){const t0=when??ac.currentTime+.04,master=envelope(ac,t0,dur,.30);master.connect(ac.destination);const vibrato=ac.createOscillator(),vGain=ac.createGain();vibrato.frequency.value=5.1;vGain.gain.value=2.0;vibrato.connect(vGain);vibrato.start(t0);vibrato.stop(t0+dur+.08);
+ const formants=[[700,95,1],[1100,120,.55],[2450,180,.18],[3300,230,.08]];
+ const osc=ac.createOscillator();osc.type='sawtooth';osc.frequency.value=freq;vGain.connect(osc.detune);
+ formants.forEach(([f,q,a])=>{const bp=ac.createBiquadFilter(),gg=ac.createGain();bp.type='bandpass';bp.frequency.value=f;bp.Q.value=f/q;gg.gain.value=a;osc.connect(bp);bp.connect(gg);gg.connect(master)});
+ const breath=ac.createBufferSource(),buf=ac.createBuffer(1,ac.sampleRate*dur,ac.sampleRate),d=buf.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*.10;breath.buffer=buf;const hp=ac.createBiquadFilter(),bg=ac.createGain();hp.type='highpass';hp.frequency.value=1400;bg.gain.value=.08;breath.connect(hp);hp.connect(bg);bg.connect(master);osc.start(t0);breath.start(t0);osc.stop(t0+dur+.08);breath.stop(t0+dur+.08);return t0}
+async function playSeq(indices,vocal=false){const ac=await readyAudio();if(!ac)return;const start=ac.currentTime+.07,step=vocal?1.22:.62;indices.forEach((idx,k)=>{const dur=k===indices.length-1?(vocal?1.9:1.25):(vocal?1.08:.54);if(vocal)playVocal(ac,NOTES[idx].hz,dur,start+k*step);else playReference(ac,NOTES[idx].hz,dur,pipes.children[idx],start+k*step)});}
+$('playScale').onclick=()=>playSeq([0,1,2]);$('playPhrase').onclick=()=>playSeq([0,1,3,4]);$('playVocal').onclick=async()=>{const ac=await readyAudio();if(ac)playVocal(ac,NOTES[selected].hz)};$('playVocalPhrase').onclick=()=>playSeq([0,1,3,4],true);
+function autoCorrelate(buf,sr){let rms=0;for(const v of buf)rms+=v*v;rms=Math.sqrt(rms/buf.length);if(rms<.012)return-1;let r1=0,r2=buf.length-1,thr=.2;for(let i=0;i<buf.length/2;i++)if(Math.abs(buf[i])<thr){r1=i;break}for(let i=1;i<buf.length/2;i++)if(Math.abs(buf[buf.length-i])<thr){r2=buf.length-i;break}const x=buf.slice(r1,r2),n=x.length,c=new Float32Array(n);for(let lag=0;lag<n;lag++){let s=0;for(let j=0;j<n-lag;j++)s+=x[j]*x[j+lag];c[lag]=s}let d=0;while(d+1<n&&c[d]>c[d+1])d++;let max=-1,pos=-1;for(let i=d;i<n;i++)if(c[i]>max){max=c[i];pos=i}if(pos<=0)return-1;const a=(c[pos-1]+c[pos+1]-2*c[pos])/2,b=(c[pos+1]-c[pos-1])/2;return sr/(pos-(a?b/(2*a):0))}
+function freqToMidi(f){return 69+12*Math.log2(f/440)}
+function noteName(m){const names=['до','до♯','ре','ми♭','ми','фа','фа♯','соль','соль♯','ля','си♭','си'];const r=Math.round(m),pc=((r%12)+12)%12,oct=Math.floor(r/12)-1;const rusOct=oct===4?'¹':oct===3?' мал.':oct===5?'²':` ${oct}`;return{name:names[pc]+rusOct,sci:['C','C♯','D','E♭','E','F','F♯','G','G♯','A','B♭','B'][pc]+oct}}
+function updatePitch(){if(!micRunning)return;const buf=new Float32Array(analyser.fftSize);analyser.getFloatTimeDomainData(buf);const f=autoCorrelate(buf,ctx.sampleRate);if(f>70&&f<1000){const midi=freqToMidi(f),nn=noteName(midi),target=NOTES[selected],cents=1200*Math.log2(f/target.hz),clamped=Math.max(-50,Math.min(50,cents));$('detected').innerHTML=`${nn.name} <small>${nn.sci} · ${f.toFixed(1)} Гц</small>`;$('needle').style.left=`${50+clamped}%`;const abs=Math.abs(cents);$('needle').style.background=abs<=12?'var(--good)':abs<=28?'var(--warn)':'var(--bad)';$('cents').textContent=abs<=12?'Попал в ноту':cents<0?`Ниже цели на ${Math.round(abs)} центов`:`Выше цели на ${Math.round(abs)} центов`;pitchHistory.push(cents);if(pitchHistory.length>35)pitchHistory.shift();if(pitchHistory.length>8){const mean=pitchHistory.reduce((a,b)=>a+b,0)/pitchHistory.length,sd=Math.sqrt(pitchHistory.reduce((a,b)=>a+(b-mean)**2,0)/pitchHistory.length);$('stability').textContent=`Стабильность: ${sd<8?'очень ровно':sd<16?'нормально':'нота гуляет'} · разброс ±${Math.round(sd)} центов`}}else{$('detected').innerHTML='— <small>жду голос</small>';$('cents').textContent='Пой устойчивое «ааа» без сильного вибрато';$('stability').textContent='Стабильность: —'}raf=requestAnimationFrame(updatePitch)}
+async function startMic(){try{const ac=await readyAudio();if(!ac)return;if(!navigator.mediaDevices?.getUserMedia)throw new Error('Микрофон недоступен в этом режиме');micStream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false}});micSource=ac.createMediaStreamSource(micStream);analyser=ac.createAnalyser();analyser.fftSize=2048;micSource.connect(analyser);micRunning=true;pitchHistory=[];$('micBtn').textContent='Выключить микрофон';$('micBtn').classList.add('active');status('Микрофон включён. Сначала нажми трубу, затем повтори ноту.');updatePitch()}catch(e){status(`Не удалось включить микрофон: ${e.message}. На iPhone открой страницу через HTTPS в Safari и разреши доступ.`)}}
+function stopMic(){micRunning=false;cancelAnimationFrame(raf);micStream?.getTracks().forEach(t=>t.stop());micStream=micSource=analyser=null;$('micBtn').textContent='Включить микрофон';$('micBtn').classList.remove('active');status('Микрофон выключен.');$('detected').innerHTML='— <small>жду голос</small>';$('cents').textContent='Сначала включи микрофон';$('stability').textContent='Стабильность: —';$('needle').style.left='50%'}
+$('micBtn').onclick=()=>micRunning?stopMic():startMic();render();
+</script></body></html>
